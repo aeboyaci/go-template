@@ -15,3 +15,10 @@ var (
 	NotFoundErrorCode       = 404
 	InternalServerErrorCode = 500
 )
+
+var ErrorCodes = map[error]int{
+	ErrorUnauthorized:   UnauthorizedErrorCode,
+	ErrorBadRequest:     BadRequestErrorCode,
+	ErrorNotFound:       NotFoundErrorCode,
+	ErrorInternalServer: InternalServerErrorCode,
+}

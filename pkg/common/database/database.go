@@ -2,6 +2,7 @@ package database
 
 import (
 	"go-template/pkg/common/env"
+	"go-template/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -22,6 +23,11 @@ func Initialize() error {
 		return err
 	}
 
+	err = autoMigrate()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -35,4 +41,14 @@ func GetInstance() *gorm.DB {
 	}
 
 	return db
+}
+
+func autoMigrate() error {
+	var err error
+	err = db.AutoMigrate(&models.User{})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -46,7 +46,7 @@ func RegisterRoutes(engine *gin.Engine) {
 	apiGroup := engine.Group("/api")
 
 	protectedApiGroup := engine.Group("/api")
-	protectedApiGroup.Use(middlewares.EnforceAuthentication(redis.GetInstance(), user.NewRepository()))
+	protectedApiGroup.Use(middlewares.EnforceAuthentication(database.GetInstance(), redis.GetInstance(), user.NewRepository()))
 
 	user.Register(apiGroup)
 }

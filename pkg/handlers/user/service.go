@@ -52,13 +52,13 @@ func (s *serviceImpl) Register(email, password string) error {
 	tx := s.db.Begin()
 	defer tx.Rollback()
 
-	if _, err := s.repository.FindUserByEmail(tx, email); err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return errors.Wrap(apierrors.ErrorBadRequest, "email already exists")
-		}
-
+	user, err := s.repository.FindUserByEmail(tx, email)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		s.logger.Error("failed to find user by email", zap.String("location", "Register"), zap.String("email", email), zap.Error(err))
 		return apierrors.ErrorInternalServer
+	}
+	if user.ID != 0 {
+		return errors.Wrap(apierrors.ErrorBadRequest, "email already exists")
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -67,7 +67,7 @@ func (s *serviceImpl) Register(email, password string) error {
 		return apierrors.ErrorInternalServer
 	}
 
-	user := models.User{
+	user = models.User{
 		Email:    email,
 		Password: string(hashedPassword),
 	}
