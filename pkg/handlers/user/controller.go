@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"go-template/pkg/common/apierrors"
 	"go-template/pkg/models"
 	"net/http"
@@ -23,7 +24,7 @@ func NewController(service Service) Controller {
 func (c *controllerImpl) Login(ctx *gin.Context) {
 	var user models.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.Error(apierrors.ErrorBadRequest)
+		ctx.Error(errors.Wrap(apierrors.ErrorBadRequest, err.Error()))
 		return
 	}
 
@@ -42,7 +43,7 @@ func (c *controllerImpl) Login(ctx *gin.Context) {
 func (c *controllerImpl) Register(ctx *gin.Context) {
 	var user models.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.Error(apierrors.ErrorBadRequest)
+		ctx.Error(errors.Wrap(apierrors.ErrorBadRequest, err.Error()))
 		return
 	}
 

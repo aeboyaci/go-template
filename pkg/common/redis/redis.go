@@ -14,7 +14,7 @@ var (
 )
 
 func Initialize() error {
-	if env.MODE == "test" {
+	if env.MODE != "production" {
 		s, err := miniredis.Run()
 		if err != nil {
 			return err
