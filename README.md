@@ -15,6 +15,7 @@ This is an example of a Golang project that uses Clean Architecture principles.
 - Middleware Tests (pkg/middlewares/*_test.go)
 - Logging with Zap
 - Caching with Redis
+- Design Patterns
 
 **Responsibility separation is applied in files as follows:**
 - router.go: registering routers
