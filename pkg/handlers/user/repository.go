@@ -35,6 +35,6 @@ func (r *repositoryImpl) FindUserByEmail(tx *gorm.DB, email string) (models.User
 	return result, err
 }
 
-func (r *repositoryImpl) SaveUser(tx *gorm.DB, account models.User) error {
-	return tx.Save(&account).Error
+func (r *repositoryImpl) SaveUser(tx *gorm.DB, user models.User) error {
+	return tx.Save(&user).Error
 }

@@ -18,7 +18,7 @@ This is an example of a Golang project that uses Clean Architecture principles.
 - Design Patterns
 
 **Responsibility separation is applied in files as follows:**
-- router.go: registering routers
+- router.go: registering routes
 - controller.go: binding parameters, calling the related service functions and returning responses
 - service.go: business logic
 - repository.go: database queries
