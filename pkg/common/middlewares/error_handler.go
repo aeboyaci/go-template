@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"go-template/pkg/common/apierrors"
 )
 
@@ -13,7 +14,7 @@ func ErrorHandler() gin.HandlerFunc {
 		}
 
 		err := ctx.Errors.Last().Err
-		statusCode, ok := apierrors.ErrorCodes[err]
+		statusCode, ok := apierrors.ErrorCodes[errors.Cause(err)]
 		if !ok {
 			statusCode = apierrors.InternalServerErrorCode
 		}

@@ -25,14 +25,16 @@ func Load() error {
 		return errors.New("DB_URL is not set")
 	}
 
-	JWT_SECRET, ok = os.LookupEnv("JWT_SECRET")
-	if !ok {
-		return errors.New("JWT_SECRET is not set")
-	}
+	if MODE == "production" {
+		JWT_SECRET, ok = os.LookupEnv("JWT_SECRET")
+		if !ok {
+			return errors.New("JWT_SECRET is not set")
+		}
 
-	REDIS_URL, ok = os.LookupEnv("REDIS_URL")
-	if !ok {
-		return errors.New("REDIS_URL is not set")
+		REDIS_URL, ok = os.LookupEnv("REDIS_URL")
+		if !ok {
+			return errors.New("REDIS_URL is not set")
+		}
 	}
 
 	return nil

@@ -5,7 +5,7 @@ import (
 	"go-template/pkg/common/apierrors"
 	"go-template/pkg/common/redis"
 	"go-template/pkg/common/utils"
-	"go-template/pkg/handlers/user"
+	"go-template/pkg/handlers/user/tests"
 	"go-template/pkg/models"
 	"gorm.io/gorm"
 	"net/http"
@@ -16,7 +16,7 @@ import (
 func Test_EnforceAuthentication_InvalidHeader(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	c := utils.SetupTestGinContext(req)
-	EnforceAuthentication(nil, redis.GetInstance(), user.NewMockRepository())(c)
+	EnforceAuthentication(nil, redis.GetInstance(), tests.NewMockRepository())(c)
 
 	assert.Equal(t, c.Errors.Last().Err, apierrors.ErrorUnauthorized)
 }
@@ -25,7 +25,7 @@ func Test_EnforceAuthentication_InvalidToken(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Header = http.Header{"Authorization": []string{"invalid_token"}}
 	c := utils.SetupTestGinContext(req)
-	EnforceAuthentication(nil, redis.GetInstance(), user.NewMockRepository())(c)
+	EnforceAuthentication(nil, redis.GetInstance(), tests.NewMockRepository())(c)
 
 	assert.Equal(t, c.Errors.Last().Err, apierrors.ErrorUnauthorized)
 }
@@ -36,7 +36,7 @@ func Test_EnforceAuthentication_ExpiredToken(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Header = http.Header{"Authorization": []string{token}}
 	c := utils.SetupTestGinContext(req)
-	EnforceAuthentication(nil, redis.GetInstance(), user.NewMockRepository())(c)
+	EnforceAuthentication(nil, redis.GetInstance(), tests.NewMockRepository())(c)
 
 	assert.Equal(t, c.Errors.Last().Err, apierrors.ErrorUnauthorized)
 }
@@ -48,7 +48,7 @@ func Test_EnforceAuthentication_UserNotFound(t *testing.T) {
 	req.Header = http.Header{"Authorization": []string{token}}
 	c := utils.SetupTestGinContext(req)
 
-	mockUserRepository := user.NewMockRepository()
+	mockUserRepository := tests.NewMockRepository()
 	mockUserRepository.MFindUserById = func(tx *gorm.DB, userId uint) (models.User, error) {
 		return models.User{}, gorm.ErrRecordNotFound
 	}
@@ -64,7 +64,7 @@ func Test_EnforceAuthentication_ValidToken(t *testing.T) {
 	req.Header = http.Header{"Authorization": []string{token}}
 	c := utils.SetupTestGinContext(req)
 
-	mockUserRepository := user.NewMockRepository()
+	mockUserRepository := tests.NewMockRepository()
 	mockUserRepository.MFindUserById = func(tx *gorm.DB, userId uint) (models.User, error) {
 		return models.User{}, nil
 	}

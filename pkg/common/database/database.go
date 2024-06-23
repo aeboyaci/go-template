@@ -23,7 +23,7 @@ func Initialize() error {
 		return err
 	}
 
-	err = autoMigrate()
+	err = db.AutoMigrate(&models.User{})
 	if err != nil {
 		return err
 	}
@@ -41,14 +41,4 @@ func GetInstance() *gorm.DB {
 	}
 
 	return db
-}
-
-func autoMigrate() error {
-	var err error
-	err = db.AutoMigrate(&models.User{})
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
