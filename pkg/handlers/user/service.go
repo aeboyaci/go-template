@@ -34,6 +34,7 @@ func (s *serviceImpl) Login(email, password string) (string, error) {
 	user, err := s.repository.FindUserByEmail(s.db, email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
+			s.logger.Debug("failed to find user by email, incorrect email", zap.String("location", "Login"), zap.String("email", email), zap.Error(err))
 			return "", errors.Wrap(apierrors.ErrorNotFound, "incorrect email or password")
 		}
 
@@ -42,6 +43,7 @@ func (s *serviceImpl) Login(email, password string) (string, error) {
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		s.logger.Debug("failed to compare password, incorrect password", zap.String("location", "Login"), zap.String("email", email), zap.Error(err))
 		return "", errors.Wrap(apierrors.ErrorNotFound, "incorrect email or password")
 	}
 
@@ -60,6 +62,7 @@ func (s *serviceImpl) Register(email, password string) error {
 		return errors.Wrap(apierrors.ErrorInternalServer, "database error")
 	}
 	if user.ID != 0 {
+		s.logger.Debug("email already exists", zap.String("location", "Register"), zap.String("email", email))
 		return errors.Wrap(apierrors.ErrorBadRequest, "email already exists")
 	}
 

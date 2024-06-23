@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=aeboyaci
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+  test_db:
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=aeboyaci_test
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - redis_storage:/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - MODE=production
+      - DB_URL=postgres://postgres:docker@db:5432/aeboyaci
+      - JWT_SECRET=R8JmjCUdkx*yc)[N$9?jmW3XY!vP4+
+      - REDIS_ADDRESS=redis:6379
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  db_storage:
+  redis_storage:

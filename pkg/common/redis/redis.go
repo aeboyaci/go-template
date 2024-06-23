@@ -20,11 +20,11 @@ func Initialize() error {
 			return err
 		}
 
-		env.REDIS_URL = s.Addr()
+		env.REDIS_ADDRESS = s.Addr()
 	}
 
 	client = redis.NewClient(&redis.Options{
-		Addr:     env.REDIS_URL,
+		Addr:     env.REDIS_ADDRESS,
 		Password: "",
 		DB:       0,
 	})

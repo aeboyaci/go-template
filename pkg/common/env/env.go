@@ -6,10 +6,10 @@ import (
 )
 
 var (
-	MODE       string
-	DB_URL     string
-	JWT_SECRET string
-	REDIS_URL  string
+	MODE          string
+	DB_URL        string
+	JWT_SECRET    string
+	REDIS_ADDRESS string
 )
 
 func Load() error {
@@ -31,9 +31,9 @@ func Load() error {
 			return errors.New("JWT_SECRET is not set")
 		}
 
-		REDIS_URL, ok = os.LookupEnv("REDIS_URL")
+		REDIS_ADDRESS, ok = os.LookupEnv("REDIS_ADDRESS")
 		if !ok {
-			return errors.New("REDIS_URL is not set")
+			return errors.New("REDIS_ADDRESS is not set")
 		}
 	}
 

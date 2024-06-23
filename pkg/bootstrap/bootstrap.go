@@ -36,6 +36,7 @@ func Initialize() error {
 		return err
 	}
 
+	gin.SetMode(gin.ReleaseMode)
 	logger.GetInstance().Info("Application initialized successfully")
 	return nil
 }
