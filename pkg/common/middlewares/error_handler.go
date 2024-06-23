@@ -17,6 +17,7 @@ func ErrorHandler() gin.HandlerFunc {
 		statusCode, ok := apierrors.ErrorCodes[errors.Cause(err)]
 		if !ok {
 			statusCode = apierrors.InternalServerErrorCode
+			err = apierrors.ErrorInternalServer
 		}
 
 		ctx.AbortWithStatusJSON(statusCode, gin.H{
